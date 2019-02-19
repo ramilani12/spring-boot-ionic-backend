@@ -10,7 +10,7 @@ public class CategotiaResource {
 	
 	
 	@RequestMapping(method=RequestMethod.GET)
-	public String listar() {
+	public String listar() {		
 		return "REST está funcionando";
 	}
 	
