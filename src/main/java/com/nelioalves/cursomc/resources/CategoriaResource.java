@@ -12,7 +12,7 @@ import com.nelioalves.cursomc.services.CategoriaService;
 
 @RestController
 @RequestMapping(value="/categorias")
-public class CategotiaResource {
+public class CategoriaResource {
 	
 	@Autowired
 	private CategoriaService service;
