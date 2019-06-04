@@ -11,26 +11,26 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.nelioalves.cursomc.domain.Categoria;
-import com.nelioalves.cursomc.services.CategoriaService;
+import com.nelioalves.cursomc.domain.Pedido;
+import com.nelioalves.cursomc.services.PedidoService;
 
 @RestController
-@RequestMapping(value="/categorias")
-public class CategoriaResource {
+@RequestMapping(value="/pedidos")
+public class PedidoResource {
 	
 	@Autowired
-	private CategoriaService service;
+	private PedidoService service;
 	
 	@RequestMapping(value="/{id}",method=RequestMethod.GET)
 	public ResponseEntity<?> find(@PathVariable final Integer id) {		
 		
-		Categoria categoria = service.buscar(id);
+		Pedido pedido = service.buscar(id);
 	
-		return ResponseEntity.ok().body(categoria);
+		return ResponseEntity.ok().body(pedido);
 	}
 	
 	@RequestMapping(method=RequestMethod.POST)
-	public ResponseEntity<Void> insert(@RequestBody Categoria obj) {
+	public ResponseEntity<Void> insert(@RequestBody Pedido obj) {
 		obj = service.insert(obj);
 		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
 											 .buildAndExpand(obj.getId()).toUri();
