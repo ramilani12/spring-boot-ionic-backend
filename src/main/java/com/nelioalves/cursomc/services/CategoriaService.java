@@ -39,12 +39,20 @@ public class CategoriaService {
 		return repo.save(obj);
 	}
 	
-	public Categoria update (Categoria obj) {
+    public Categoria update (Categoria obj) {
 		
-		find(obj.getId());
+		Categoria newObj = find(obj.getId());
 		
-		return repo.save(obj);
+		updateData(newObj , obj);
+		
+		return repo.save(newObj);
 				
+	}
+	
+	private void updateData(Categoria newObj , Categoria obj) {
+		
+		newObj.setNome(obj.getNome());
+		
 	}
 	
 	public Page<Categoria> findPage(Integer page , Integer linerPerPage, String orderBy , String direction){
