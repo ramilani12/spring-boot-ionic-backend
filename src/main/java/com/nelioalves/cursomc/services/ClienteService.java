@@ -10,9 +10,14 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 
+import com.nelioalves.cursomc.domain.Cidade;
 import com.nelioalves.cursomc.domain.Cliente;
+import com.nelioalves.cursomc.domain.Endereco;
+import com.nelioalves.cursomc.domain.enums.TipoCliente;
 import com.nelioalves.cursomc.dto.ClienteDTO;
+import com.nelioalves.cursomc.dto.ClienteNewDTO;
 import com.nelioalves.cursomc.repositories.ClienteRepository;
+import com.nelioalves.cursomc.repositories.EnderecoRepository;
 import com.nelioalves.cursomc.services.exceptions.DataIntegrityException;
 import com.nelioalves.cursomc.services.exceptions.ObjectNotFoundException;
 
@@ -21,6 +26,9 @@ public class ClienteService {
 
 	@Autowired
 	private ClienteRepository repo;
+	
+	@Autowired
+	private EnderecoRepository endRepo;
 
 	public Cliente find(final Integer id) {
 		Optional<Cliente> obj = repo.findById(id);
@@ -34,6 +42,17 @@ public class ClienteService {
 	}
 	
 	
+	
+	public Cliente  insert(Cliente  obj) {
+		
+		obj.setId(null);
+		
+		obj = repo.save(obj);
+		
+		endRepo.saveAll(obj.getEnderecos());
+		
+		return obj;
+	}
 	
 	public Cliente update (Cliente obj) {
 		
@@ -74,4 +93,32 @@ public class ClienteService {
 	public Cliente fromDTO(ClienteDTO dto) {
 		return new Cliente(dto.getId(), dto.getNome(), dto.getEmail(), null , null);
 	}
+	
+	
+	public Cliente fromDTO(ClienteNewDTO cli) {
+		
+		Cliente cliente = new Cliente(null, cli.getNome(), cli.getEmail(), cli.getCpfOuCnpj(), TipoCliente.toEnum(cli.getTipo()));
+		
+		Cidade cidade = new Cidade(cli.getCidadeId(), null , null);
+		
+		Endereco end = new Endereco(null, cli.getLogradouro(), cli.getNumero(), cli.getComplemento(), cli.getBairro(), cli.getCep(), 
+				cliente, cidade);
+		
+		cliente.getEnderecos().add(end);
+		
+		cliente.getTelefones().add(cli.getTelefone1());
+		
+		if (cli.getTelefone2() != null) {
+			cliente.getTelefones().add(cli.getTelefone2());
+		}
+		
+		if (cli.getTelefone3() != null) {
+			cliente.getTelefones().add(cli.getTelefone3());
+		}
+		
+		
+		return cliente;
+	
+	}
+	
 }
