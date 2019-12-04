@@ -72,6 +72,10 @@ public class ItemPedido implements Serializable{
 		return this.getPedido();
 	}
 	
+	public double getSubTotal() {
+		return (preco - desconto) * quantiade;
+	}
+	
 	public Produto getProduto() {
 		return this.id.getProduto();
 	}
