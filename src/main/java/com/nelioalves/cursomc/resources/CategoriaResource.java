@@ -22,6 +22,10 @@ import com.nelioalves.cursomc.domain.Categoria;
 import com.nelioalves.cursomc.dto.CategoriaDTO;
 import com.nelioalves.cursomc.services.CategoriaService;
 
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
+
 @RestController
 @RequestMapping(value="/categorias")
 public class CategoriaResource {
@@ -29,6 +33,8 @@ public class CategoriaResource {
 	@Autowired
 	private CategoriaService service;
 	
+	
+	@ApiOperation(value="Busca por id")
 	@RequestMapping(value="/{id}",method=RequestMethod.GET)
 	public ResponseEntity<Categoria> find(@PathVariable final Integer id) {		
 		
@@ -37,7 +43,7 @@ public class CategoriaResource {
 		return ResponseEntity.ok().body(categoria);
 	}
 	
-	
+	@ApiOperation(value="Busca todas as categorias")
 	@RequestMapping(method=RequestMethod.GET)
 	public ResponseEntity<List<CategoriaDTO>> findAll() {		
 		
@@ -49,6 +55,7 @@ public class CategoriaResource {
 	}
 	
 	@RequestMapping(value="/page" , method=RequestMethod.GET)
+	@ApiOperation(value="Busca Categorias por Paginação")
 	public ResponseEntity<Page<CategoriaDTO>> findPage(
 			@RequestParam(value="page", defaultValue="0") Integer page , 
 			@RequestParam(value="linesPerPage", defaultValue="24")  Integer linerPerPage, 
@@ -63,6 +70,7 @@ public class CategoriaResource {
 	}
 	
 	@PreAuthorize("hasAnyRole('ADMIN')")
+	@ApiOperation(value="Insere uma categoria")
 	@RequestMapping(method=RequestMethod.POST)
 	public ResponseEntity<Void> insert(@Valid @RequestBody CategoriaDTO objDto) {
 		
@@ -76,6 +84,7 @@ public class CategoriaResource {
 	
 	@PreAuthorize("hasAnyRole('ADMIN')")
 	@RequestMapping(value="/{id}",method=RequestMethod.PUT)
+	@ApiOperation(value="Atualiza uma Categoria")
 	public ResponseEntity<Void> update(@Valid @RequestBody CategoriaDTO objDto,@PathVariable final Integer id) {
 	
 		Categoria obj = service.fromDTO(objDto);
@@ -87,6 +96,9 @@ public class CategoriaResource {
 	}
 	
 	@PreAuthorize("hasAnyRole('ADMIN')")
+	@ApiOperation(value="Remove uma Categoria por ID")
+	@ApiResponses(value = {
+			@ApiResponse(code = 400, message = "Não é possível excluir uma categoria que possui produtos"), @ApiResponse(code = 404, message = "Código inexistente") })
 	@RequestMapping(value="/{id}",method=RequestMethod.DELETE)
 	public ResponseEntity<Categoria> delete(@PathVariable final Integer id) {		
 		
